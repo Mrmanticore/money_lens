@@ -1,13 +1,14 @@
 import os
 import cv2
 import numpy as np
-from flask import Flask, render_template, Response, jsonify
+from flask import Flask, render_template, Response, jsonify, request, redirect, url_for, flash
 from roboflow import Roboflow
 import pygame
 import threading
 import time
 import os
 from dotenv import load_dotenv
+import sqlite3
 
 # Load environment variables from .env file
 load_dotenv()
@@ -15,16 +16,15 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
+
 # Database setup: create database if not exists
 DATABASE = 'contact.db'
-
 
 # Initialize Pygame for sound
 pygame.mixer.init()
 
-
 # Roboflow API Setup (Replace with your API key and project version)
-rf = Roboflow(api_key = os.getenv("MY_API_KEY"))  # Replace with your API key
+rf = Roboflow(api_key=os.getenv("MY_API_KEY"))  # Replace with your API key
 project = rf.workspace().project("curency-qkufr")  # Replace with your project
 model = project.version(1).model  # Replace with the actual version
 
@@ -57,27 +57,24 @@ def capture_and_predict(frame):
 
     start_time = time.time()
 
-    # Make prediction using the Roboflow model
-    prediction = model.predict(image_path).json()
+    try:
+        # Make prediction using the Roboflow model
+        prediction = model.predict(image_path).json()
 
-    # Timeout handling (e.g., 5 seconds timeout)
-    if time.time() - start_time > 5:
+        # Check if there are any predictions
+        if 'predictions' in prediction and len(prediction['predictions']) > 0:
+            predictions = prediction['predictions'][0]['predictions']
+            predicted_class = max(predictions, key=lambda x: predictions[x]['confidence'])
+            confidence_score = predictions[predicted_class]['confidence']
+
+            # Set a confidence threshold (e.g., 90%)
+            if confidence_score >= 0.7:
+                # Play the sound for the predicted class in a separate thread
+                threading.Thread(target=play_sound, args=(predicted_class,)).start()
+                return predicted_class, confidence_score
         return "No Note", 0.0
-
-    # Check if there are any predictions
-    if len(prediction['predictions']) > 0:
-        predictions = prediction['predictions'][0]['predictions']
-        predicted_class = max(predictions, key=lambda x: predictions[x]['confidence'])
-        confidence_score = predictions[predicted_class]['confidence']
-
-        # Set a confidence threshold (e.g., 90%)
-        if confidence_score >= 0.9:
-            # Play the sound for the predicted class in a separate thread
-            threading.Thread(target=play_sound, args=(predicted_class,)).start()
-            return predicted_class, confidence_score
-        else:
-            return "No Note", 0.0
-    else:
+    except Exception as e:
+        print(f"Error during prediction: {e}")
         return "No Note", 0.0
 
 # Generate live camera feed with reduced resolution (640x480)
@@ -99,6 +96,20 @@ def gen_frames():
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
     cap.release()
+
+# Initialize the database if it doesn't exist
+def init_db():
+    if not os.path.exists(DATABASE):
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS contacts
+                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                           name TEXT NOT NULL,
+                           email TEXT NOT NULL,
+                           subject TEXT NOT NULL,
+                           message TEXT NOT NULL)''')
+        conn.commit()
+        conn.close()
 
 # Routes
 @app.route('/')
@@ -128,6 +139,40 @@ def capture_image():
         'predicted_class': predicted_class,
         'confidence_score': confidence_score
     })
+
+# Initialize the database
+init_db()
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+# Route to handle form submission
+@app.route('/submit_contact', methods=['POST'])
+def submit_contact():
+    name = request.form['name']
+    email = request.form['email']
+    subject = request.form['subject']
+    message = request.form['message']
+
+    # Insert the form data into SQLite database
+    try:
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO contacts (name, email, subject, message) VALUES (?, ?, ?, ?)",
+                       (name, email, subject, message))
+        conn.commit()
+        conn.close()
+
+        flash('Your message has been sent successfully!', 'success')
+    except Exception as e:
+        flash(f'An error occurred: {e}', 'danger')
+
+    return redirect(url_for('contact'))
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 if __name__ == '__main__':
     if not os.path.exists('captured_images'):
