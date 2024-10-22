@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Note Detector</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #007acc;
+        }
+        #videoElement {
+            border: 5px solid #007acc;
+        }
+        #capture-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Currency Note Detector</h1>
+    <img id="videoElement" src="{{ url_for('video_feed') }}" width="640" height="480">
+    <br><br>
+    <button id="capture-btn">Capture</button>
+    <p id="prediction"></p>
+
+    <script>
+        const captureBtn = document.getElementById('capture-btn');
+        const predictionText = document.getElementById('prediction');
+
+        captureBtn.addEventListener('click', () => {
+            fetch('/capture', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.predicted_class === "No Note") {
+                    predictionText.textContent = "No note detected in the image.";
+                } else {
+                    predictionText.textContent = `Predicted Class: ${data.predicted_class}, Confidence: ${data.confidence_score.toFixed(2)}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
