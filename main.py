@@ -1,15 +1,13 @@
 import os
 import cv2
 import numpy as np
-from flask import Flask, render_template, Response, jsonify,request, redirect, url_for, flash
+from flask import Flask, render_template, Response, jsonify
 from roboflow import Roboflow
 import pygame
 import threading
 import time
 import os
 from dotenv import load_dotenv
-import sqlite3
-
 
 # Load environment variables from .env file
 load_dotenv()
@@ -102,19 +100,6 @@ def gen_frames():
 
     cap.release()
 
-def init_db():
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS contacts
-                      (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       name TEXT NOT NULL,
-                       email TEXT NOT NULL,
-                       subject TEXT NOT NULL,
-                       message TEXT NOT NULL)''')
-    conn.commit()
-    conn.close()
-
-
 # Routes
 @app.route('/')
 def index():
@@ -144,36 +129,6 @@ def capture_image():
         'confidence_score': confidence_score
     })
 
-# Initialize the database
-init_db()
-
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-# Route to handle form submission
-@app.route('/submit_contact', methods=['POST'])
-def submit_contact():
-    name = request.form['name']
-    email = request.form['email']
-    subject = request.form['subject']
-    message = request.form['message']
-
-    # Insert the form data into SQLite database
-    try:
-        conn = sqlite3.connect(DATABASE)
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO contacts (name, email, subject, message) VALUES (?, ?, ?, ?)",
-                       (name, email, subject, message))
-        conn.commit()
-        conn.close()
-
-        flash('Your message has been sent successfully!', 'success')
-    except Exception as e:
-        flash(f'An error occurred: {e}', 'danger')
-
-    return redirect(url_for('contact'))
 if __name__ == '__main__':
     if not os.path.exists('captured_images'):
         os.makedirs('captured_images')
