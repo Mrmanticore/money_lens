@@ -4,30 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currency Note Detector</title>
-    <style>
-        body {
-            background-color: #f0f8ff;
-            color: #333;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        h1 {
-            color: #007acc;
-        }
-        #videoElement {
-            border: 5px solid #007acc;
-        }
-        #capture-btn {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #007acc;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+    <!-- Correct Flask way to link CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <nav>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"> <!-- Correct static folder usage -->
+
+        <span class="hamburger">&#9776;</span> <!-- Hamburger icon for smaller screens -->
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
     <h1>Currency Note Detector</h1>
     <img id="videoElement" src="{{ url_for('video_feed') }}" width="640" height="480">
     <br><br>
@@ -53,6 +44,12 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+        });
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('nav ul');
+    
+        hamburger.addEventListener('click', () => {
+            navMenu.style.display = navMenu.style.display === 'block' ? 'none' : 'block';
         });
     </script>
 </body>

@@ -1,19 +1,25 @@
 import os
 import cv2
 import numpy as np
-from flask import Flask, render_template, Response, jsonify
+from flask import Flask, render_template, Response, jsonify,request, redirect, url_for, flash
 from roboflow import Roboflow
 import pygame
 import threading
 import time
 import os
 from dotenv import load_dotenv
+import sqlite3
+
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
+# Database setup: create database if not exists
+DATABASE = 'contact.db'
+
 
 # Initialize Pygame for sound
 pygame.mixer.init()
@@ -25,7 +31,7 @@ project = rf.workspace().project("curency-qkufr")  # Replace with your project
 model = project.version(1).model  # Replace with the actual version
 
 # Define sound directory
-sound_dir = os.path.join(os.path.dirname(__file__), 'statics', 'sounds')
+sound_dir = os.path.join(os.path.dirname(__file__), 'static', 'sounds')
 
 # Function to play sound based on predicted class (non-blocking)
 def play_sound(predicted_class):
@@ -96,6 +102,19 @@ def gen_frames():
 
     cap.release()
 
+def init_db():
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS contacts
+                      (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       name TEXT NOT NULL,
+                       email TEXT NOT NULL,
+                       subject TEXT NOT NULL,
+                       message TEXT NOT NULL)''')
+    conn.commit()
+    conn.close()
+
+
 # Routes
 @app.route('/')
 def index():
@@ -125,6 +144,36 @@ def capture_image():
         'confidence_score': confidence_score
     })
 
+# Initialize the database
+init_db()
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+# Route to handle form submission
+@app.route('/submit_contact', methods=['POST'])
+def submit_contact():
+    name = request.form['name']
+    email = request.form['email']
+    subject = request.form['subject']
+    message = request.form['message']
+
+    # Insert the form data into SQLite database
+    try:
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO contacts (name, email, subject, message) VALUES (?, ?, ?, ?)",
+                       (name, email, subject, message))
+        conn.commit()
+        conn.close()
+
+        flash('Your message has been sent successfully!', 'success')
+    except Exception as e:
+        flash(f'An error occurred: {e}', 'danger')
+
+    return redirect(url_for('contact'))
 if __name__ == '__main__':
     if not os.path.exists('captured_images'):
         os.makedirs('captured_images')
