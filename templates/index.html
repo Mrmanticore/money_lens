@@ -6,6 +6,7 @@
     <title>Currency Note Detector</title>
     <!-- Correct Flask way to link CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/switch.css') }}">
 </head>
 <body>
     <nav>
@@ -13,9 +14,9 @@
 
         <span class="hamburger">&#9776;</span> <!-- Hamburger icon for smaller screens -->
         <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
         </ul>
     </nav>
 
