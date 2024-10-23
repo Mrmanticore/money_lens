@@ -9,6 +9,7 @@ import time
 import os
 from dotenv import load_dotenv
 import sqlite3
+from flask import send_file, abort
 
 # Load environment variables from .env file
 load_dotenv()
@@ -51,7 +52,9 @@ def play_sound(predicted_class):
             pygame.mixer.music.play()
 
 # Function to capture frame and make prediction
+# Function to capture frame and make prediction
 def capture_and_predict(frame):
+    # Path to save the captured image in "captured_images" folder
     image_path = "captured_images/current_frame.jpg"
     cv2.imwrite(image_path, frame)
 
@@ -67,15 +70,50 @@ def capture_and_predict(frame):
             predicted_class = max(predictions, key=lambda x: predictions[x]['confidence'])
             confidence_score = predictions[predicted_class]['confidence']
 
-            # Set a confidence threshold (e.g., 90%)
+            # Set a confidence threshold (e.g., 70%)
             if confidence_score >= 0.7:
+                # Annotate and save the image with predictions in the downloads folder
+                save_annotated_image(frame, predicted_class, confidence_score)
+
                 # Play the sound for the predicted class in a separate thread
                 threading.Thread(target=play_sound, args=(predicted_class,)).start()
+
                 return predicted_class, confidence_score
         return "No Note", 0.0
     except Exception as e:
         print(f"Error during prediction: {e}")
         return "No Note", 0.0
+
+
+# Function to save the annotated image
+# Function to save the annotated image with a white background
+def save_annotated_image(frame, predicted_class, confidence_score):
+    # Ensure the "downloads" folder exists
+    downloads_folder = os.path.join(os.getcwd(), 'downloads')
+    if not os.path.exists(downloads_folder):
+        os.makedirs(downloads_folder)
+
+    # Create a white background image of the same size as the frame
+    height, width, _ = frame.shape
+    white_background = np.ones((height, width, 3), dtype=np.uint8) * 255
+
+    # Annotate the image with class and confidence score using OpenCV
+    cv2.putText(white_background, f"Class: {predicted_class}, Confidence: {confidence_score:.2f}",
+                (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)  # Black text
+
+    # Overlay the original frame on the white background
+    # You can choose to blend or simply place the frame on the white background
+    # For this case, we will use a simple overlay
+    white_background[0:height, 0:width] = frame
+
+    # Path to save the annotated image in the downloads folder
+    output_image_path = os.path.join(downloads_folder, f"{predicted_class}_{int(time.time())}.jpg")
+    cv2.imwrite(output_image_path, white_background)
+
+    print(f"Annotated image saved to: {output_image_path}")
+
+
+
 
 # Generate live camera feed with reduced resolution (640x480)
 def gen_frames():
@@ -139,6 +177,33 @@ def capture_image():
         'predicted_class': predicted_class,
         'confidence_score': confidence_score
     })
+
+
+
+
+@app.route('/latest_image')
+def latest_image():
+    downloads_folder = os.path.join(os.getcwd(), 'downloads')  # Make sure the path is absolute
+    try:
+        # Ensure the directory exists
+        if not os.path.exists(downloads_folder):
+            return "Downloads folder does not exist", 404
+
+        # Get the latest image file
+        files = [f for f in os.listdir(downloads_folder) if f.endswith('.jpg') or f.endswith('.png')]
+        if not files:
+            return "No image found", 404
+
+        # Sort files by creation time and get the latest one
+        latest_file = max([os.path.join(downloads_folder, f) for f in files], key=os.path.getctime)
+
+        # Send the latest image file with correct MIME type
+        return send_file(latest_file, as_attachment=True)  # Forces download
+
+    except Exception as e:
+        print(f"Error fetching latest image: {e}")
+        abort(500, description="Error fetching image")
+
 
 # Initialize the database
 init_db()

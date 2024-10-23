@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <nav>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"> <!-- Correct static folder usage -->
+
+        <span class="hamburger">&#9776;</span> <!-- Hamburger icon for smaller screens -->
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+    </nav>
     <h1>Contact Us</h1>
 
     <form action="{{ url_for('submit_contact') }}" method="POST">
