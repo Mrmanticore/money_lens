@@ -5,94 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currency Note Detector</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/switch.css') }}">
-    <style>
-        body {
-            position: relative;
-        }
-        #capture-btn {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-right: 10px;
-        }
 
-        #capture-btn.processing {
-            background-color: #0056b3;
-        }
-
-        #capture-btn.submitted {
-            background-color: #28a745;
-        }
-
-        #capture-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        .dot {
-            cursor: pointer;
-            font-size: 30px;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 160px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .hamburger {
-            cursor: pointer;
-            font-size: 30px;
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: inline-block;
-            }
-
-            nav ul {
-                display: none;
-                list-style-type: none;
-            }
-
-            nav ul.show {
-                display: block;
-            }
-        }
-    </style>
 </head>
 <body>
     <nav>
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-        <span class="hamburger">&#9776;</span>
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo3.png') }}" alt="Logo" style="width: 100px; height: 80px;">
+        </a>
+                <span class="hamburger">&#9776;</span>
         <ul>
             <li><a href="{{ url_for('index') }}">Home</a></li>
             <li><a href="{{ url_for('about') }}">About</a></li>
@@ -111,8 +31,7 @@
             <span class="dot">⋮</span>
             <div class="dropdown-content">
                 <a href="#" id="download-image">Download Image</a>
-                <a href="#">Option 2</a>
-                <a href="#">Option 3</a>
+             {#  <a href="#">Option 2</a> #}
             </div>
         </div>
     </div>

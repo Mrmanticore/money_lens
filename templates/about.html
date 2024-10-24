@@ -1,1 +1,44 @@
-<h1>hello<h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo3.png') }}" alt="Logo" style="width: 100px; height: 80px;">
+        </a>
+
+        <span class="hamburger">&#9776;</span> <!-- Hamburger icon for smaller screens -->
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>About Us</h1>
+        <p>Welcome to our company! We are dedicated to providing the best services in the industry. Our team consists of professionals with extensive experience in the field, striving to meet your needs and exceed your expectations.</p>
+
+        <h2>Our Mission</h2>
+        <p>Our mission is to deliver high-quality solutions that empower our clients to achieve their goals. We are committed to innovation, excellence, and customer satisfaction.</p>
+
+        <h2>Our Values</h2>
+        <ul>
+            <li><strong>Integrity:</strong> We operate with transparency and honesty.</li>
+            <li><strong>Innovation:</strong> We embrace creativity and new ideas.</li>
+            <li><strong>Customer Focus:</strong> We prioritize our clients' needs and their success.</li>
+            <li><strong>Excellence:</strong> We strive to deliver outstanding results in every project.</li>
+        </ul>
+
+        <h2>Our History</h2>
+        <p>Founded in [Year], our company started with a vision to make a difference in the industry. Over the years, we have grown into a trusted name, serving a wide range of clients across different sectors.</p>
+    </div>
+</body>
+</html>

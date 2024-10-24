@@ -10,12 +10,18 @@ import os
 from dotenv import load_dotenv
 import sqlite3
 from flask import send_file, abort
+import threading
+from image_cleaner import run_cleanup
+
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+cleanup_thread = threading.Thread(target=run_cleanup, daemon=True)
+cleanup_thread.start()
+
 app.secret_key = os.getenv('SECRET_KEY')
 
 # Database setup: create database if not exists
@@ -86,29 +92,19 @@ def capture_and_predict(frame):
 
 
 # Function to save the annotated image
-# Function to save the annotated image with a white background
 def save_annotated_image(frame, predicted_class, confidence_score):
     # Ensure the "downloads" folder exists
     downloads_folder = os.path.join(os.getcwd(), 'downloads')
     if not os.path.exists(downloads_folder):
         os.makedirs(downloads_folder)
 
-    # Create a white background image of the same size as the frame
-    height, width, _ = frame.shape
-    white_background = np.ones((height, width, 3), dtype=np.uint8) * 255
-
     # Annotate the image with class and confidence score using OpenCV
-    cv2.putText(white_background, f"Class: {predicted_class}, Confidence: {confidence_score:.2f}",
-                (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)  # Black text
-
-    # Overlay the original frame on the white background
-    # You can choose to blend or simply place the frame on the white background
-    # For this case, we will use a simple overlay
-    white_background[0:height, 0:width] = frame
+    cv2.putText(frame, f"Class: {predicted_class}, Confidence: {confidence_score:.2f}",
+                (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
     # Path to save the annotated image in the downloads folder
     output_image_path = os.path.join(downloads_folder, f"{predicted_class}_{int(time.time())}.jpg")
-    cv2.imwrite(output_image_path, white_background)
+    cv2.imwrite(output_image_path, frame)
 
     print(f"Annotated image saved to: {output_image_path}")
 
@@ -238,6 +234,7 @@ def submit_contact():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 if __name__ == '__main__':
     if not os.path.exists('captured_images'):

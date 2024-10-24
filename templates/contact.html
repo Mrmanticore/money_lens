@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+     {# <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> #}
+
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}"> 
 </head>
 <body>
     <nav>
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"> <!-- Correct static folder usage -->
-
+        <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='images/logo3.png') }}" alt="Logo" style="width: 100px; height: 80px;">
+        </a>
+        
         <span class="hamburger">&#9776;</span> <!-- Hamburger icon for smaller screens -->
         <ul>
             <li><a href="{{ url_for('index') }}">Home</a></li>
@@ -29,10 +33,12 @@
         <label for="subject">Subject:</label><br>
         <input type="text" id="subject" name="subject" required><br><br>
 
-        <label for="message">Message:</label><br>
-        <textarea id="message" name="message" rows="5" required></textarea><br><br>
+        <label for="message">Message:</label><br>          
 
-        <button type="submit">Submit</button>
-    </form>
+        {#<textarea id="message" name="message" rows="5" required></textarea><br><br> #}
+        <textarea id="message" name="message" rows="5" class="custom-textarea" required></textarea>   {#for fix contact#}
+
+          <button type="submit">Submit</button>
+        </form>
 </body>
 </html>
