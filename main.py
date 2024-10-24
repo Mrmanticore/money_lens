@@ -237,6 +237,8 @@ def about():
 
 
 if __name__ == '__main__':
+    # app.run(host='0.0.0.0', port=5000, debug=True) for local host on mobile
+
     if not os.path.exists('captured_images'):
         os.makedirs('captured_images')
     app.run(debug=True)
