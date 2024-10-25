@@ -22,10 +22,10 @@ Jinja2==3.1.4
 kiwisolver==1.4.7
 MarkupSafe==2.1.3
 marshmallow==3.23.0
-matplotlib==3.7.2  # Keep this as it is
+matplotlib==3.7.2
 multidict==6.1.0
 mypy-extensions==1.0.0
-numpy==1.24.4
+numpy==1.24.4  # Ensure this is compatible with scipy version you choose
 opencv-python==4.10.0.84
 opencv-python-headless==4.10.0.84
 packaging==24.1
@@ -34,14 +34,14 @@ pip-check-reqs==2.5.3
 propcache==0.2.0
 py-cpuinfo==9.0.0
 pygame==2.6.1
-pyparsing>=2.3.1,<3.1  # Updated version to resolve conflict
+pyparsing>=2.3.1,<3.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 PyYAML==6.0.2
 requests==2.32.3
 requests-toolbelt==1.0.0
 roboflow==1.1.48
-scipy==1.9.3
+scipy==1.8.0  # Downgraded version to avoid conflicts
 six==1.16.0
 supervision==0.24.0
 tqdm==4.66.5
