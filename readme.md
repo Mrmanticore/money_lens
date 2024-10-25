@@ -20,10 +20,10 @@ Welcome to **Money Lens**, an open-source project designed to make Indian curren
 
 1. **Clone the Repository**
 
-   ```bash
+```bash
    git clone https://github.com/your-username/money-lens.git
    cd money-lens
-
+```
 
 2. Install Dependencies
 
@@ -36,8 +36,7 @@ pip install -r requirements.txt
 
     Create a .env file in the root directory with the following variables:
 
-       ```bash
-
+```bash
     SECRET_KEY=<your-secret-key>
     MY_API_KEY=<your-roboflow-api-key>
 ```
@@ -46,8 +45,9 @@ pip install -r requirements.txt
 
    Start the Flask server:
 
-
+```bash
    python app.py
+```
 
 ## 🛠️ Usage
 Open the application and allow access to your device’s camera.
