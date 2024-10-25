@@ -50,11 +50,22 @@ nav ul {
     display: flex;
     transition: max-height 0.5s ease;
 }
-
-/* Adjusting the size of h1 and the video element for smaller screens */
+/* animation fadeindow */
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 h1 {
     color: #007acc;
     font-size: 2rem;
+    animation: fadeInDown 1s ease-in-out;
+
 }
 form {
     display: inline-block;

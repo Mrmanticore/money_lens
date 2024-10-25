@@ -53,10 +53,23 @@ nav ul {
 }
 
 /* Adjusting the size of h1 and the video element for smaller screens */
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 h1 {
     color: #007acc;
     font-size: 2rem;
+    animation: fadeInDown 1s ease-in-out;
+
 }
+
 /* addjust as needed */
 .custom-textarea {
     width: 997px;

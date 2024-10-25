@@ -5,6 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    
+        h1 {
+            padding: 50px;
+            text-align: center;
+            background-color: #4745d;
+            color: #007acc;
+            animation: fadeInDown 1s ease-in-out;
+        }
+    
+        article {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-bottom: 1px solid #ccc;
+            font-size: 27px;
+        }
+    
+        .date {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    
+        .text-start {
+            text-align: justify;
+        }
+
+        /* Hamburger menu and nav styling */
+        nav {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color:#007acc;
+
+            color: white;
+        }
+        
+        .hamburger {
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Show hamburger and hide menu items on small screens */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+            }
+            nav ul.show {
+                display: flex;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -21,24 +106,30 @@
         </ul>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <h1>About Us</h1>
-        <p>Welcome to our company! We are dedicated to providing the best services in the industry. Our team consists of professionals with extensive experience in the field, striving to meet your needs and exceed your expectations.</p>
+    <h1>ABOUT US</h1>
 
-        <h2>Our Mission</h2>
-        <p>Our mission is to deliver high-quality solutions that empower our clients to achieve their goals. We are committed to innovation, excellence, and customer satisfaction.</p>
+    <article>
+      <p class="date"></p>
+      <p class="text-start">
+        Money Lens is a currency recognition application designed to accurately identify Indian currency notes in real-time. This tool leverages advanced machine learning models and computer vision techniques to recognize various denominations, including ₹10, ₹20, ₹50, ₹100, ₹200, ₹500, and  ₹2000 notes. Using a live camera feed, Money Lens captures images of currency notes, predicts the denomination, and provides a confidence score to verify the prediction accuracy. Additionally, an integrated audio feature announces the denomination for enhanced accessibility and ease of use.<br><br>
 
-        <h2>Our Values</h2>
-        <ul>
-            <li><strong>Integrity:</strong> We operate with transparency and honesty.</li>
-            <li><strong>Innovation:</strong> We embrace creativity and new ideas.</li>
-            <li><strong>Customer Focus:</strong> We prioritize our clients' needs and their success.</li>
-            <li><strong>Excellence:</strong> We strive to deliver outstanding results in every project.</li>
-        </ul>
+        This project is built using Flask for the backend, OpenCV for real-time video processing, and Roboflow’s API for leveraging machine learning models trained on thousands of Indian currency images. Money Lens is a highly interactive tool, designed for seamless performance across different devices, making it ideal for those needing rapid and reliable currency recognition, such as visually impaired users, cashiers, or anyone dealing with large amounts of cash daily.<br><br>
+  
+        Our team of experienced and dedicated farmers works tirelessly to nurture the soil and plants, employing advanced techniques and modern technology to optimize productivity and maintain the highest quality standards. We believe in sustainable agriculture, which not only benefits our customers but also helps in preserving the land for future generations.<br><br>
+  
+       
+      </p>
+    </article>
 
-        <h2>Our History</h2>
-        <p>Founded in [Year], our company started with a vision to make a difference in the industry. Over the years, we have grown into a trusted name, serving a wide range of clients across different sectors.</p>
-    </div>
+    <!-- JavaScript for Hamburger Menu -->
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('nav ul');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+    </script>
+
 </body>
 </html>
