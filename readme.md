@@ -76,5 +76,5 @@ Open-source communities that inspire collaborative development
 ## 📢 Join Us!
 Whether you’re an experienced developer or just starting out, your contributions make a difference. Let’s make Money Lens the best currency recognition tool together!
 
-
+#thanks
 
