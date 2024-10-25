@@ -241,4 +241,5 @@ if __name__ == '__main__':
 
     if not os.path.exists('captured_images'):
         os.makedirs('captured_images')
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run()
