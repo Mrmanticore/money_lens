@@ -28,18 +28,25 @@ Welcome to **Money Lens**, an open-source project designed to make Indian curren
 2. Install Dependencies
 
     Make sure you have Python 3.8+ installed. Then run:
-    pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
 3. Set Up Environment Variables
 
     Create a .env file in the root directory with the following variables:
+
+       ```bash
+
     SECRET_KEY=<your-secret-key>
     MY_API_KEY=<your-roboflow-api-key>
-
+```
 
 4. Run the Application
 
    Start the Flask server:
+
+
    python app.py
 
 ## 🛠️ Usage
@@ -68,4 +75,6 @@ Roboflow for API support
 Open-source communities that inspire collaborative development
 ## 📢 Join Us!
 Whether you’re an experienced developer or just starting out, your contributions make a difference. Let’s make Money Lens the best currency recognition tool together!
+
+
 
