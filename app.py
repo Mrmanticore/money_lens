@@ -236,10 +236,16 @@ def about():
     return render_template('about.html')
 
 
-if __name__ == '__main__':
-    # app.run(host='0.0.0.0', port=5000, debug=True) for local host on mobile
+# if __name__ == '__main__':
+#     # app.run(host='0.0.0.0', port=5000, debug=True) for local host on mobile
 
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Default to port 5000 if PORT is not set
+
+    # Create the 'captured_images' directory if it doesn't exist
     if not os.path.exists('captured_images'):
         os.makedirs('captured_images')
-    # app.run(debug=True)
-    app.run()
+
+    # Run the Flask app
+    app.run(host="0.0.0.0", port=port)

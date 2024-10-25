@@ -4,3 +4,6 @@ main2.py
 imp.txt
 __pycache__/
 __pycache__
+a.txt
+.vercel/
+.vercel
