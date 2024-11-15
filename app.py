@@ -13,6 +13,7 @@ from flask import send_file, abort
 import threading
 from image_cleaner import run_cleanup
 
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
 
 # Load environment variables from .env file
 load_dotenv()
